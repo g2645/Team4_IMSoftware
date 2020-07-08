@@ -32,16 +32,16 @@ public:
 	//初始化
 	int init();
 	//向服务器发送
-	//1.消息2.账号3.密码
+	//1.消息2.登录提交7.注册提交
 	int sendMessage(char* oriMsg);
 	//接收服务器的消息
 	int recvMessage(char* oriMsg);
 	//处理消息
-	void handleMessage(int tag,char* oriMsg,char* msg1,char* msg2);
-	void handleMessage(int tag,char* oriMsg,char* msg1,char* msg2,char* msg3);
+	string handleMessage(int tag,char* ID,char* password);
+	string handleMessage(char* sendID,char* message,char* recvID);
 	//解析消息
-	void parseMessage(char* oriMsg, int* type, char* sendID, char* msg, char* revID);
-	//接收服务器在线列表
-	vector <char*> onlineID();
+	int parseMessage(char* oriMsg);//3.登录确认 5.‘4’获取结束 8.注册确认
+	int parseMessage(char* oriMsg, char* msg1);// 4.在线ID 6.增加在线用户
+	int parseMessage(char* oriMsg, char* msg1, char* msg2, char* msg3);//1.消息
 };
 
