@@ -11,7 +11,7 @@ Client::~Client()
 {
 }
 
-int Client::init()
+int Client::init()//返回-1，初始化WinSock失败，-2建立TCPSocket失败，-3连接服务器失败
 {
 	m_status = true;
 	m_port = 8888;
@@ -24,7 +24,8 @@ int Client::init()
 	}
 	//建立TCPSocket
 	m_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_socket == INVALID_SOCKET) {
+	if (m_socket == INVALID_SOCKET) 
+	{
 		cout << "socket() fail:" << WSAGetLastError() << endl;
 		return -2;
 	}
@@ -37,79 +38,31 @@ int Client::init()
 	if (connect(m_socket, (SOCKADDR*)&addrSrv, sizeof(SOCKADDR)) == INVALID_SOCKET)
 	{
 		cout << "connect() fail" << WSAGetLastError() << endl;
-		return -1;
+		return -3;
 	}
 	return 0;
 }
 
 void Client::parseMessage(char* oriMsg, int* type, char* sendID, char* msg, char* revID)
 {
-	//获取指令
-	*type = oriMsg[1] - '0';
-	//#号统计
-	int flag = 2;
-	//原始消息长度
-	int len = strlen(oriMsg);
-	//计数统计
-	int i_sendID = 0;
-	int i_msg = 0;
-	int i_revID = 0;
-
-	for (int i = 3; i < len; i++)
-	{
-		if (msg[i] == '#')
-		{
-			flag++;
-			if (flag == 5)
-			{
-				break;
-			}
-			continue;
-		}
-		//如果是发送方的ID
-		if (flag == 2)
-		{
-			sendID[i_sendID] = oriMsg[i];
-			i_sendID++;
-		}
-		//如果是消息
-		else if(flag==3)
-		{
-			msg[i_msg] = oriMsg[i];
-			i_msg++;
-		}
-		//如果是接收方的ID
-		else if (flag==4)
-		{
-			revID[i_revID] = oriMsg[i];
-			i_revID++;
-		}
-	}
-
-	sendID[i_sendID] = '\0';
-	msg[i_msg] = '\0';
-	revID[i_revID] = '\0';
+	//处理1.聊天消息2.账号密码3.成功失败
 }
 
-vector <char*> Client::onlineID()
+/*vector <char*> Client::onlineID()
 {
-
 }
-
-void Client::handleMessage(int tag,char* oriMsg,char* msg)
+*/
+void Client::handleMessage(int tag,char* oriMsg,char* msg1,char* msg2)
 {
-	if (tag == 2)
-		oriMsg = '#'+'2'+'#'+'#'+msg+'#'+'#';
-	else
-		oriMsg = '#'+'3'+'#'+'#'+msg+'#'+'#';
+
 }
 
 void Client::handleMessage(int tag,char* oriMsg,char* msg1,char* msg2,char* msg3)
 {
-	oriMsg = '#'+'1'+'#'+msg1+'#'+msg2+'#'+msg3+'#';
+
 }
 
-int Client::sendMessage(char* oriMsg)
+int Client::sendMessage(char* oriMsg)//返回-1发送消息失败
 {
 	if(send(m_socket,oriMsg,strlen(oriMsg),0)==SOCKET_ERROR)
 		return -1;
@@ -117,7 +70,7 @@ int Client::sendMessage(char* oriMsg)
 		return 0;
 }
 
-int Client::recvMessage(char* oriMsg)
+int Client::recvMessage(char* oriMsg)//返回-1接收消息失败
 {
 	char* recvMsg;
     int len = recv(m_socket,recvMsg, 1024, 0);
@@ -135,38 +88,67 @@ int Client::recvMessage(char* oriMsg)
     }
 }
 
-int Client::qt_SignIn(char* ID,char* password)
+int Client::qt_SignIn(char* ID,char* password)//返回-1，发送账号密码失败，-2接收服务器返回消息失败，-3登录失败用户名或密码有误
 {
-	//?注册这部分再讨论下
+	int len=strlen(ID);
+	for(int i=0;i<len;i++)
+	{
+		m_ID[i]=ID[i];
+	}
+	//发送给服务器
+	char* oriMsg;
+	handleMessage(2,oriMsg,ID,password);
+	int err = sendMessage(oriMsg);
+	if(err = -1)
+		return -1;
+	else
+	{
+		//接收服务器发送成功的消息
+		err=recvMessage(oriMsg);
+		if(err = -1)
+			return -2;
+		//如果服务器返回成功，修改在线状态为上线，否则返回-3
+		/*parseMessage();
+		if()
+			m_status=true;
+		else
+			return -3;*/
+	}
+	init();
 }
 
 int Client::qt_Register(char* ID,char* password)
 {
-	//发送给服务器
-	char* oriMsg;
-	handleMessage(2,oriMsg,ID);
-	sendMessage(oriMsg);
-	handleMessage(3,oriMsg,password);
-	sendMessage(oriMsg);
+	//?注册这部分再讨论下
+	return 0;
 }
 
 int Client::qt_sendMessage(char* sendID,char* message,char* recvID)
 {
 	char* oriMsg;
 	handleMessage(1,oriMsg,sendID,message,recvID);
-	sendMessage(oriMsg);
+	int err = sendMessage(oriMsg);
+	if(err = -1)
+		return -1;
+	else if(err = 0)
+		return 0;
 }
 
 int Client::qt_onlineID()
 {
-	onlineID();
+	//onlineID();
+	return 0;
 }
 
 int Client::qt_Message()
 {
 	int* type;
 	char* oriMsg,* sendID,* msg,* revID;
-	recvMessage(oriMsg);
+	int err = recvMessage(oriMsg);
 	parseMessage(oriMsg, type, sendID, msg, revID);
+	if(err = -1)
+		return -1;
+	else if(err = 0)
+		return 0;
 }
 

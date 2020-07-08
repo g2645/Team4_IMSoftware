@@ -37,7 +37,7 @@ public:
 	//接收服务器的消息
 	int recvMessage(char* oriMsg);
 	//处理消息
-	void handleMessage(int tag,char* oriMsg,char* msg);
+	void handleMessage(int tag,char* oriMsg,char* msg1,char* msg2);
 	void handleMessage(int tag,char* oriMsg,char* msg1,char* msg2,char* msg3);
 	//解析消息
 	void parseMessage(char* oriMsg, int* type, char* sendID, char* msg, char* revID);
