@@ -26,9 +26,9 @@ public:
 	//用户点击发送
 	int qt_sendMessage(char* sendID,char* message,char* recvID);
 	//显示在线列表
-	int qt_onlineID();
+	int qt_onlineID(char *ID);
 	//显示消息
-	int qt_Message();
+	int qt_Message(char *sendID, char *msg);
 	//初始化
 	int init();
 	//向服务器发送
@@ -40,8 +40,8 @@ public:
 	string handleMessage(int tag,char* ID,char* password);
 	string handleMessage(char* sendID,char* message,char* recvID);
 	//解析消息
-	int parseMessage(char* oriMsg);//3.登录确认 5.‘4’获取结束 8.注册确认
-	int parseMessage(char* oriMsg, char* msg1);// 4.在线ID 6.增加在线用户
+	int parseMessage(char* oriMsg);//3.登录确认  8.注册确认
+	int parseMessage(char* oriMsg, char* msg1);// 4.在线ID 5.‘4’获取结束 6.增加在线用户
 	int parseMessage(char* oriMsg, char* msg1, char* msg2, char* msg3);//1.消息
 };
 

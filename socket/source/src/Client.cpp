@@ -44,16 +44,14 @@ int Client::init() //·µ»Ø-1£¬³õÊ¼»¯WinSockÊ§°Ü£¬-2½¨Á¢TCPSocketÊ§°Ü£¬-3Á¬½Ó·şÎñÆ
 }
 
 //1.ÏûÏ¢ 3.µÇÂ¼È·ÈÏ 4.ÔÚÏßID 5.¡®4¡¯»ñÈ¡½áÊø 6.Ôö¼ÓÔÚÏßÓÃ»§ 8.×¢²áÈ·ÈÏ
-int Client::parseMessage(char *oriMsg) //3.µÇÂ¼È·ÈÏ 5.¡®4¡¯»ñÈ¡½áÊø 8.×¢²áÈ·ÈÏ
+int Client::parseMessage(char *oriMsg) //3.µÇÂ¼È·ÈÏ  8.×¢²áÈ·ÈÏ
 {
-	if (oriMsg[1] - 48 == '5')
-		return 5;
 	if (oriMsg[3] - 48 == '1')
 		return 0;
 	else
 		return -1;
 }
-int Client::parseMessage(char *oriMsg, char *msg1) // 4.ÔÚÏßID 6.Ôö¼ÓÔÚÏßÓÃ»§
+int Client::parseMessage(char *oriMsg, char *msg1) // 4.ÔÚÏßID 5.¡®4¡¯»ñÈ¡½áÊø 6.Ôö¼ÓÔÚÏßÓÃ»§
 {
 	int len = strlen(oriMsg);
 	int tag = oriMsg[1] - 48;
@@ -100,7 +98,7 @@ int Client::parseMessage(char *oriMsg, char *msg1, char *msg2, char *msg3) //1.Ï
 
 string Client::handleMessage(int tag, char *ID, char *password)
 {
-	return string("#" + to_string (tag) + "#" + string(ID) + "#" + string(password) + "#" + "#");
+	return string("#" + to_string(tag) + "#" + string(ID) + "#" + string(password) + "#" + "#");
 }
 
 string Client::handleMessage(char *sendID, char *message, char *recvID)
@@ -198,24 +196,31 @@ int Client::qt_sendMessage(char *sendID, char *message, char *recvID)
 	int err = sendMessage(oriMsg);
 	if (err = -1)
 		return -1;
-	else if (err = 0)
+	else
 		return 0;
 }
-/*ÒÔÏÂĞèÒªĞŞ¸Ä*/
-int Client::qt_onlineID()
+
+int Client::qt_onlineID(char *ID)
 {
-	//onlineID();
-	return 0;
+	while (1)
+	{
+		char *oriMsg;
+		char *t;
+		recvMessage(oriMsg);
+		int tag = parseMessage(oriMsg, t);
+		if (tag != 5)
+			ID = t;
+		return 0;
+	}
 }
 
-int Client::qt_Message()
+int Client::qt_Message(char *sendID, char *msg)
 {
-	int *type;
-	char *oriMsg, *sendID, *msg, *revID;
+	char *oriMsg , *revID;
 	int err = recvMessage(oriMsg);
-	//parseMessage(oriMsg, type, sendID, msg, revID);
+	parseMessage(oriMsg,sendID, msg, revID);
 	if (err = -1)
 		return -1;
-	else if (err = 0)
+	else
 		return 0;
 }
