@@ -13,7 +13,6 @@ Client::~Client()
 
 int Client::init() //返回-1，初始化WinSock失败，-2建立TCPSocket失败，-3连接服务器失败
 {
-	m_status = true;
 	m_port = 8888;
 
 	//初始化WinSock
@@ -135,6 +134,7 @@ int Client::recvMessage(char *oriMsg) //返回-1接收消息失败
 
 int Client::qt_SignIn(char *ID, char *password) //返回-1，发送账号密码失败，-2接收服务器返回消息失败，-3登录失败用户名或密码有误
 {
+	init();
 	int len = strlen(ID);
 	for (int i = 0; i < len; i++)
 	{
@@ -144,13 +144,13 @@ int Client::qt_SignIn(char *ID, char *password) //返回-1，发送账号密码�
 	string temp = handleMessage(2, ID, password);
 	char *oriMsg = &temp[0];
 	int err = sendMessage(oriMsg);
-	if (err = -1)
+	if (err == -1)
 		return -1;
 	else
 	{
 		//接收服务器发送成功的消息
 		err = recvMessage(oriMsg);
-		if (err = -1)
+		if (err == -1)
 			return -2;
 		//如果服务器返回成功，修改在线状态为上线，否则返回-3
 		int flag = parseMessage(oriMsg);
@@ -159,19 +159,20 @@ int Client::qt_SignIn(char *ID, char *password) //返回-1，发送账号密码�
 		else
 			return -3;
 	}
-	init();
+	m_status = true;
 	return 0;
 }
 
 int Client::qt_Register(char *ID, char *password) //返回-1，发送账号密码失败，-2接收服务器返回消息失败，-3用户名重复，-4，初始化WinSock失败，-5建立TCPSocket失败，-6连接服务器失败
 {
+	int err = init();
 	string temp = handleMessage(7, ID, password);
 	char *oriMsg = &temp[0];
-	int err = sendMessage(oriMsg);
-	if (err = -1)
+	err = sendMessage(oriMsg);
+	if (err == -1)
 		return -1;
 	err = recvMessage(oriMsg);
-	if (err = -1)
+	if (err == -2)
 		return -2;
 	int flag = parseMessage(oriMsg);
 	if (flag == 0)
@@ -183,9 +184,11 @@ int Client::qt_Register(char *ID, char *password) //返回-1，发送账号密�
 	{
 		m_ID[i] = ID[i];
 	}
-	//注册成功后要直接登录
-	err = init();
-	return err;
+	//注册成功后直接登录
+	if(err!=0)
+		return err;
+	else
+		m_status = true;
 	return 0;
 }
 
@@ -194,7 +197,7 @@ int Client::qt_sendMessage(char *sendID, char *message, char *recvID)
 	string temp = handleMessage(sendID, message, recvID);
 	char *oriMsg = &temp[0];
 	int err = sendMessage(oriMsg);
-	if (err = -1)
+	if (err == -1)
 		return -1;
 	else
 		return 0;
@@ -202,8 +205,6 @@ int Client::qt_sendMessage(char *sendID, char *message, char *recvID)
 
 int Client::qt_onlineID(char *ID)
 {
-	while (1)
-	{
 		char *oriMsg;
 		char *t;
 		recvMessage(oriMsg);
@@ -211,7 +212,6 @@ int Client::qt_onlineID(char *ID)
 		if (tag != 5)
 			ID = t;
 		return 0;
-	}
 }
 
 int Client::qt_Message(char *sendID, char *msg)
@@ -219,7 +219,7 @@ int Client::qt_Message(char *sendID, char *msg)
 	char *oriMsg , *revID;
 	int err = recvMessage(oriMsg);
 	parseMessage(oriMsg,sendID, msg, revID);
-	if (err = -1)
+	if (err == -1)
 		return -1;
 	else
 		return 0;
