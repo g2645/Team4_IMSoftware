@@ -7,41 +7,41 @@ public:
 	~Client();
 
 public:
-	//ID¿Í»§¶ËID
+	//IDå®¢æˆ·ç«¯ID
 	char m_ID[ID_LEN];
-	//¿Í»§¶ËÌ×½Ó×Ö
+	//å®¢æˆ·ç«¯å¥—æ¥å­—
 	SOCKET m_socket;
-	//µÇÂ¼×´Ì¬
+	//ç™»å½•çŠ¶æ€
 	bool m_status;
-	//¶Ë¿Ú
+	//ç«¯å£
 	int m_port;
 
 	WORD    wVersionRequested;
 	WSADATA wsaData;
 
-	//ÓÃ»§µã»÷µÇÂ¼
+	//ç”¨æˆ·ç‚¹å‡»ç™»å½•
 	int qt_SignIn(char* ID,char* password);
-	//ÓÃ»§µã»÷×¢²á
+	//ç”¨æˆ·ç‚¹å‡»æ³¨å†Œ
 	int qt_Register(char* ID,char* password);
-	//ÓÃ»§µã»÷·¢ËÍ
+	//ç”¨æˆ·ç‚¹å‡»å‘é€
 	int qt_sendMessage(char* sendID,char* message,char* recvID);
-	//ÏÔÊ¾ÔÚÏßÁĞ±í
-	int qt_onlineID();
-	//ÏÔÊ¾ÏûÏ¢
-	int qt_Message();
-	//³õÊ¼»¯
+	//æ˜¾ç¤ºåœ¨çº¿åˆ—è¡¨
+	int qt_onlineID(char *ID);
+	//æ˜¾ç¤ºæ¶ˆæ¯
+	int qt_Message(char *sendID, char *msg);
+	//åˆå§‹åŒ–
 	int init();
-	//Ïò·şÎñÆ÷·¢ËÍ
-	//1.ÏûÏ¢2.ÕËºÅ3.ÃÜÂë
+	//å‘æœåŠ¡å™¨å‘é€
+	//1.æ¶ˆæ¯2.ç™»å½•æäº¤7.æ³¨å†Œæäº¤
 	int sendMessage(char* oriMsg);
-	//½ÓÊÕ·şÎñÆ÷µÄÏûÏ¢
+	//æ¥æ”¶æœåŠ¡å™¨çš„æ¶ˆæ¯
 	int recvMessage(char* oriMsg);
-	//´¦ÀíÏûÏ¢
-	void handleMessage(int tag,char* oriMsg,char* msg1,char* msg2);
-	void handleMessage(int tag,char* oriMsg,char* msg1,char* msg2,char* msg3);
-	//½âÎöÏûÏ¢
-	void parseMessage(char* oriMsg, int* type, char* sendID, char* msg, char* revID);
-	//½ÓÊÕ·şÎñÆ÷ÔÚÏßÁĞ±í
-	vector <char*> onlineID();
+	//å¤„ç†æ¶ˆæ¯
+	string handleMessage(int tag,char* ID,char* password);
+	string handleMessage(char* sendID,char* message,char* recvID);
+	//è§£ææ¶ˆæ¯
+	int parseMessage(char* oriMsg);//3.ç™»å½•ç¡®è®¤  8.æ³¨å†Œç¡®è®¤
+	int parseMessage(char* oriMsg, char* msg1);// 4.åœ¨çº¿ID 5.â€˜4â€™è·å–ç»“æŸ 6.å¢åŠ åœ¨çº¿ç”¨æˆ·
+	int parseMessage(char* oriMsg, char* msg1, char* msg2, char* msg3);//1.æ¶ˆæ¯
 };
 
