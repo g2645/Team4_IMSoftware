@@ -2,7 +2,14 @@
 #include <QApplication>
 #include <QFile>
 #include "friendlist.h"
+#include "Client.h"
+#include "baohan.h"
 
+
+void Client()
+{
+
+}
 
 void setStyle(const QString &qssFile)
 {
@@ -15,6 +22,7 @@ void setStyle(const QString &qssFile)
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    //new class Client(cil);
     Login w;
     w.show();
     return a.exec();

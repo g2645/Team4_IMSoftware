@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -16,7 +16,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Client.cpp \
+    Listen.cpp \
     chatmessage.cpp \
+    chatmessage/qnchatmessage.cpp \
     friendlist.cpp \
     main.cpp \
     login.cpp \
@@ -24,11 +27,15 @@ SOURCES += \
     register.cpp
 
 HEADERS += \
+    Client.h \
+    baohan.h \
     chatmessage.h \
+    chatmessage/qnchatmessage.h \
     friendlist.h \
     login.h \
     muitemdelegate.h \
-    register.h
+    register.h \
+    stdafx.h
 
 FORMS += \
     chatmessage.ui \
@@ -36,19 +43,27 @@ FORMS += \
     login.ui \
     register.ui
 
+#INCLUDEPATH += E:\QT Creator\build-untitled4-Desktop_x86_windows_msvc2019_pe_64bit-Debug\debug
+
+#LIBS += \E:\QT Creator\build-untitled4-Desktop_x86_windows_msvc2019_pe_64bit-Debug\debug\sqlite3.lib
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/HotDog.jpg \
-    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/PACT.jpg \
-    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/li.jpg \
-    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/logo.jpg \
-    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/yang.jpg \
-    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/zhang.jpg \
-    ../TrainingProject-master/InstantMessaging/Qt/MuListView/style.qss
+    ../Demo_MessageChat/img/Customer Copy.png \
+    ../Demo_MessageChat/img/Customer Copy.png \
+    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/Customer Copy.png \
+    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/Customer Copy.png \
+    ../TrainingProject-master/InstantMessaging/Qt/MuListView/images/Customer Copy.png \
+    Customer Copy.png \
+    Customer Copy.png \
+    img/Customer Copy.png \
+    img/Customer Copy.png \
+    img/Customer Copy.png \
+    img/Customer Copy.png
 
 RESOURCES += \
     ../TrainingProject-master/InstantMessaging/Qt/MuListView/Style.qrc \

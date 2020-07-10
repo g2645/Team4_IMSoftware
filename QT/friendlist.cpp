@@ -1,5 +1,3 @@
-#pragma execution_character_set("utf-8")
-
 #include "friendlist.h"
 #include "ui_friendlist.h"
 #include "login.h"
@@ -7,10 +5,13 @@
 #include "chatmessage.h"
 #include <QLabel>
 #include <QObject>
-#include <QMessageBox>
-
+#include "baohan.h"
 #include "muitemdelegate.h"
+#include <QMessageBox>
+#include "qdebug.h"
 
+extern Client cli;
+//ChatMessage b;
 
 const QStringList icons = {
     ":/images/HotDog.jpg", ":/images/li.jpg", ":/images/logo.jpg",
@@ -29,6 +30,14 @@ FriendList::FriendList(QWidget *parent) :
     QPixmap pixmap(":/images/logo.jpg");
     ui->label_2->setPixmap(pixmap);
     ui->label_2->show();
+    //int mn = cli.qt_firOnlineID(Id);
+    int mn=0;
+    while(mn==0)
+    {
+        mn=cli.qt_firOnlineID(Id);
+        qDebug("111");
+        break;
+    }
     QStandardItemModel *pModel = new QStandardItemModel();
     for (int i=0; i<icons.size(); ++i) {
         QStandardItem *pItem = new QStandardItem;
@@ -41,10 +50,20 @@ FriendList::FriendList(QWidget *parent) :
     }
     m_model = pModel;
 
+//    QStandardItemModel *n_model = new QStandardItemModel();
+//    //QStandardItemModel *n_model;
+//    QList<QStandardItem*> cItem;
+
     MuItemDelegate *pItemDelegate = new MuItemDelegate(this);
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->listView->setItemDelegate(pItemDelegate);
     ui->listView->setModel(m_model);
+
+//    cItem.push_back(new QStandardItem(QString("01")));
+//    //cItem.push_back(new QStandardItem(QString("02")));
+//    n_model->appendRow(cItem);
+//    ui->listView_2->setModel(n_model);
+
     connect(ui->exitlogin,SIGNAL(clicked()),this,SLOT(exitlogin()));
     connect(ui->listView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(chat(QModelIndex)));
     //connect(ui->listView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(showClick(QModelIndex)));
@@ -67,7 +86,7 @@ void FriendList::chat(QModelIndex)
 {
     ChatMessage *b = new ChatMessage;
     b->show();
-    this->hide();
+    //this->hide();
 }
 
 void FriendList::showClick(QModelIndex index)

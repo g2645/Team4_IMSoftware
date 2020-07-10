@@ -30,9 +30,13 @@ private slots:
     void exitlogin();
     void showClick(QModelIndex index);
     void chat(QModelIndex);
-
+private:
+    char *Id;
+    char *pParam;
+    int mm;
 private:
     QStandardItemModel *m_model;
+    //QStandardItemModel *n_model;
     Ui::FriendList *ui;
 };
 
