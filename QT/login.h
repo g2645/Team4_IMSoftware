@@ -4,7 +4,9 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include "register.h"
-
+//#include "mysqlite.hpp"
+//#include "sqlite3.h"
+#include "Client.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Login; }
@@ -28,6 +30,7 @@ private slots:
     void loginclicked();
 
 private:
+    //Client *a;
     Ui::Login *ui;
 };
 #endif // LOGIN_H

@@ -7,6 +7,10 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QObject>
+#include "Client.cpp"
+#include "baohan.h"
+//#include ""
+Client cli;
 
 Login::Login(QWidget *parent)
     : QMainWindow(parent)
@@ -40,28 +44,41 @@ void Login::loginclicked()
 {
     QString username = ui->lineEdituser->text();
     QString password = ui->lineEditpwd->text();
-//    if(username == ""||password =="")
-//    {
-//        QMessageBox::information(this,"警告","输入不能为空",QMessageBox::Ok);
-//    }else
-//    {
-//        QSqlQuery query;
-//        query.prepare("select username,password from admin where username=:username and password = :password");
+    //Client *a =new Client;
+    QByteArray ba = username.toLatin1();
+    QByteArray bb = password.toLatin1();
 
-//        query.bindValue(":username",username);
-//        query.bindValue(":password",password);
-//        query.exec();
-//        if(!query.next())
-//        {
-//            QMessageBox::information(this,"警告","用户名或密码错误!",QMessageBox::Ok);
+    int c = cli.qt_SignIn(ba.data(),bb.data());
+    if(username == ""||password =="")
+    {
+        QMessageBox::information(this,"warning","The user name and password cannot be empty!",QMessageBox::Ok);
+    }else
+    {
+        switch(c){
+        case -1:
+            QMessageBox::information(this,"warning","fail in send!",QMessageBox::Ok);
+            break;
+        case -2:
+            QMessageBox::information(this,"warning","Receiving server returned message failed!",QMessageBox::Ok);
 
-//        }else{
-//            QMessageBox::information(this,"提醒","登录成功!",QMessageBox::Ok);
+            break;
+        case 0:
+            QMessageBox::information(this,"warning","Login failure, wrong user name or password!",QMessageBox::Ok);
+
+            break;
+        case -3:
+            QMessageBox::information(this,"warning","Login successful!",QMessageBox::Ok);
+            //int mn = cli.qt_firOnlineID();
             FriendList *m=new FriendList;
             m->show();
             this->close();
-//        }
-//    }
+            break;
+        }
+//            QMessageBox::information(this,"warning","Login successful!",QMessageBox::Ok);
+//            FriendList *m=new FriendList;
+//            m->show();
+//            this->close();
 }
 
 
+}
